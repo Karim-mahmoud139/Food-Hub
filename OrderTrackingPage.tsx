@@ -1,12 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Order } from '../types';
-import { OrderStatusTracker } from '../components/OrderStatusTracker';
-import { Card } from '../components/ui/card';
-import { Button } from '../components/ui/button';
+import { Order } from './types';
+import { OrderStatusTracker } from './components/OrderStatusTracker';
+import { Card } from './components/ui/card';
+import { Button } from './components/ui/button';
 import { ArrowLeft, MapPin, Phone } from 'lucide-react';
-import { mockOrders } from '../data/mockData';
-import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { mockOrders } from './data/mockData';
+import { ImageWithFallback } from './components/figma/ImageWithFallback';
 
 export function OrderTrackingPage() {
   const { orderId } = useParams<{ orderId: string }>();

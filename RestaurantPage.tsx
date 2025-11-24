@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { mockRestaurants, mockMenuItems } from '../data/mockData';
-import { MenuItemCard } from '../components/MenuItemCard';
+import { mockRestaurants, mockMenuItems } from './data/mockData';
+import { MenuItemCard } from './components/MenuItemCard';
 import { Star, Clock, DollarSign, ArrowLeft } from 'lucide-react';
-import { Button } from '../components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { Button } from './components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
+import { ImageWithFallback } from './components/figma/ImageWithFallback';
 
 export function RestaurantPage() {
   const { id } = useParams<{ id: string }>();

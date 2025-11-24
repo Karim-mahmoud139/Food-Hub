@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../contexts/CartContext';
-import { useAuth } from '../contexts/AuthContext';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Textarea } from '../components/ui/textarea';
-import { Card } from '../components/ui/card';
+import { useCart } from './CartContext';
+import { useAuth } from './AuthContext';
+import { Button } from './components/ui/button';
+import { Input } from './components/ui/input';
+import { Label } from './components/ui/label';
+import { Textarea } from './components/ui/textarea';
+import { Card } from './components/ui/card';
 import { ArrowLeft } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
-import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { toast } from 'sonner';
+import { ImageWithFallback } from './components/figma/ImageWithFallback';
 
 export function CheckoutPage() {
   const navigate = useNavigate();

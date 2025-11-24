@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockOrders } from '../data/mockData';
-import { Card } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
+import { mockOrders } from './data/mockData';
+import { Card } from './components/ui/card';
+import { Button } from './components/ui/button';
+import { Badge } from './components/ui/badge';
 import { ArrowLeft, Clock, Eye } from 'lucide-react';
-import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { ImageWithFallback } from './components/figma/ImageWithFallback';
 
 export function OrderHistoryPage() {
   const navigate = useNavigate();

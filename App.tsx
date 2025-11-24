@@ -18,7 +18,7 @@ import { Input } from './components/ui/input';
 import { Toaster } from './components/ui/sonner';
 import { mockRestaurants, mockMenuItems } from './data/mockData';
 import { User, Restaurant, MenuItem, CartItem, Order, Review } from './types';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 type View = 'restaurants' | 'menu' | 'admin';
 

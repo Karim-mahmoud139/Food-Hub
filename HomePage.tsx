@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { mockRestaurants } from '../data/mockData';
-import { RestaurantCard } from '../components/RestaurantCard';
-import { Input } from '../components/ui/input';
+import { mockRestaurants } from './data/mockData';
+import { RestaurantCard } from './components/RestaurantCard';
+import { Input } from './components/ui/input';
 import { Search } from 'lucide-react';
 
 export function HomePage() {
