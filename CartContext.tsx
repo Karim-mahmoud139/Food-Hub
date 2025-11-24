@@ -18,18 +18,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = (item: MenuItem) => {
     setItems(prev => {
-      const existing = prev.find(i => i.id === item.id);
+      const existing = prev.find(i => i.menuItem.id === item.id);
       if (existing) {
         return prev.map(i =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+          i.menuItem.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      return [...prev, { ...item, quantity: 1 }];
+      return [...prev, { menuItem: item, quantity: 1 }];
     });
   };
 
   const removeItem = (itemId: string) => {
-    setItems(prev => prev.filter(i => i.id !== itemId));
+    setItems(prev => prev.filter(i => i.menuItem.id !== itemId));
   };
 
   const updateQuantity = (itemId: string, quantity: number) => {
@@ -38,7 +38,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return;
     }
     setItems(prev =>
-      prev.map(i => (i.id === itemId ? { ...i, quantity } : i))
+      prev.map(i => (i.menuItem.id === itemId ? { ...i, quantity } : i))
     );
   };
 
@@ -47,7 +47,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const getTotal = () => {
-    return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    return items.reduce((sum, item) => sum + item.menuItem.price * item.quantity, 0);
   };
 
   const getItemCount = () => {

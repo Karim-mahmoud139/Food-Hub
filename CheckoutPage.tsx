@@ -137,22 +137,22 @@ export function CheckoutPage() {
 
               <div className="space-y-3 mb-4">
                 {items.map((item) => (
-                  <div key={item.id} className="flex gap-3">
+                  <div key={item.menuItem.id} className="flex gap-3">
                     <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded">
                       <ImageWithFallback
-                        src={item.image}
-                        alt={item.name}
+                        src={item.menuItem.image}
+                        alt={item.menuItem.name}
                         className="w-full h-full object-cover"
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm truncate">{item.name}</p>
+                      <p className="text-sm truncate">{item.menuItem.name}</p>
                       <p className="text-sm text-muted-foreground">
                         Qty: {item.quantity}
                       </p>
                     </div>
                     <div className="text-sm">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      ${(item.menuItem.price * item.quantity).toFixed(2)}
                     </div>
                   </div>
                 ))}

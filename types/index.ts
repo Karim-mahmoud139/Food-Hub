@@ -41,8 +41,11 @@ export interface Order {
   restaurantName: string;
   items: CartItem[];
   total: number;
-  status: 'preparing' | 'on-the-way' | 'delivered';
-  createdAt: string;
+  deliveryFee?: number;
+  status: 'pending' | 'preparing' | 'on-the-way' | 'delivered' | 'cancelled';
+  createdAt: string | Date;
+  address?: string;
+  phone?: string;
   rating?: number;
   review?: string;
 }

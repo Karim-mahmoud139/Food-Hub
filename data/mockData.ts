@@ -1,4 +1,4 @@
-import { Restaurant, MenuItem } from '../types';
+import { Restaurant, MenuItem, Order } from './types';
 
 export const mockRestaurants: Restaurant[] = [
   {
@@ -201,5 +201,52 @@ export const mockMenuItems: MenuItem[] = [
     category: 'Appetizers',
     rating: 4.5,
     reviews: 92
+  }
+];
+
+export const mockOrders: Order[] = [
+  {
+    id: 'ORD001',
+    userId: '1',
+    restaurantId: '1',
+    restaurantName: 'Pizza Palace',
+    items: [
+      {
+        menuItem: mockMenuItems[0],
+        quantity: 2
+      },
+      {
+        menuItem: mockMenuItems[2],
+        quantity: 1
+      }
+    ],
+    total: 31.97,
+    deliveryFee: 2.99,
+    status: 'delivered',
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+    address: '123 Main St, City',
+    phone: '+1234567890'
+  },
+  {
+    id: 'ORD002',
+    userId: '1',
+    restaurantId: '2',
+    restaurantName: 'Burger Haven',
+    items: [
+      {
+        menuItem: mockMenuItems[4],
+        quantity: 1
+      },
+      {
+        menuItem: mockMenuItems[6],
+        quantity: 2
+      }
+    ],
+    total: 18.97,
+    deliveryFee: 2.99,
+    status: 'on-the-way',
+    createdAt: new Date(Date.now() - 3600000).toISOString(),
+    address: '123 Main St, City',
+    phone: '+1234567890'
   }
 ];

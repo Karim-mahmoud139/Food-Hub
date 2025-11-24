@@ -81,22 +81,22 @@ export function OrderHistoryPage() {
 
                 <div className="space-y-2 mb-4">
                   {order.items.slice(0, 3).map((item) => (
-                    <div key={item.id} className="flex items-center gap-3">
+                    <div key={item.menuItem.id} className="flex items-center gap-3">
                       <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded">
                         <ImageWithFallback
-                          src={item.image}
-                          alt={item.name}
+                          src={item.menuItem.image}
+                          alt={item.menuItem.name}
                           className="w-full h-full object-cover"
                         />
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm">{item.name}</p>
+                        <p className="text-sm">{item.menuItem.name}</p>
                         <p className="text-xs text-muted-foreground">
                           Qty: {item.quantity}
                         </p>
                       </div>
                       <p className="text-sm">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        ${(item.menuItem.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   ))}

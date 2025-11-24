@@ -145,12 +145,12 @@ export function OrderTrackingPage() {
             <div className="space-y-3">
               {order.items.length > 0 ? (
                 order.items.map((item) => (
-                  <div key={item.id} className="flex justify-between">
+                  <div key={item.menuItem.id} className="flex justify-between">
                     <div className="flex gap-2">
                       <span className="text-muted-foreground">{item.quantity}x</span>
-                      <span>{item.name}</span>
+                      <span>{item.menuItem.name}</span>
                     </div>
-                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                    <span>${(item.menuItem.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))
               ) : (
