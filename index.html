@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="CSS/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -14,15 +16,16 @@
             <div class="logo" onclick="goToHome()">
                 <span class="logo-food">Food</span><span class="logo-hub">Hub</span>
             </div>
-            
+
             <div class="header-actions">
                 <button class="btn-cart" onclick="toggleCart()" id="cartBtn">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-badge" id="cartBadge">0</span>
                 </button>
-                <button class="btn-primary" onclick="showLoginModal()" id="loginBtn">
+                <a href="login.html" class="btn-primary" id="loginBtn"
+                    style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
                     Login / Sign Up
-                </button>
+                </a>
                 <div class="user-menu" id="userMenu" style="display: none;">
                     <span id="userName"></span>
                     <button class="btn-secondary" onclick="handleLogout()">Logout</button>
@@ -40,15 +43,11 @@
                 <div class="container">
                     <h1 class="hero-title">Order Food from Your Favorite Restaurants</h1>
                     <p class="hero-subtitle">Fast delivery • Real-time tracking • Best prices</p>
-                    
+
                     <div class="search-container">
                         <i class="fas fa-search search-icon"></i>
-                        <input 
-                            type="text" 
-                            class="search-input-hero" 
-                            id="restaurantSearch"
-                            placeholder="Search for restaurants or cuisines..."
-                        >
+                        <input type="text" class="search-input-hero" id="restaurantSearch"
+                            placeholder="Search for restaurants or cuisines...">
                     </div>
                 </div>
             </section>
@@ -58,11 +57,12 @@
                 <div class="container">
                     <div class="section-header">
                         <h2 id="restaurantsTitle">Available Restaurants</h2>
-                        <button class="btn-outline" onclick="showOrderHistory()" id="orderHistoryBtn" style="display: none;">
+                        <button class="btn-outline" onclick="showOrderHistory()" id="orderHistoryBtn"
+                            style="display: none;">
                             <i class="fas fa-clock"></i> Order History
                         </button>
                     </div>
-                    
+
                     <div class="restaurants-grid" id="restaurantsGrid">
                         <!-- Restaurants will be dynamically inserted here -->
                     </div>
@@ -83,12 +83,7 @@
 
                 <div class="menu-search">
                     <i class="fas fa-search search-icon"></i>
-                    <input 
-                        type="text" 
-                        class="search-input" 
-                        id="menuSearch"
-                        placeholder="Search menu items..."
-                    >
+                    <input type="text" class="search-input" id="menuSearch" placeholder="Search menu items...">
                 </div>
 
                 <div class="category-tabs" id="categoryTabs">
@@ -162,7 +157,8 @@
 
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="password" id="authPassword" class="form-input" placeholder="Enter your password" required>
+                        <input type="password" id="authPassword" class="form-input" placeholder="Enter your password"
+                            required>
                     </div>
 
                     <div class="form-group">
@@ -199,17 +195,20 @@
                 <form id="checkoutForm" onsubmit="placeOrder(event)">
                     <div class="form-group">
                         <label>Delivery Address</label>
-                        <textarea id="deliveryAddress" class="form-input" rows="3" placeholder="Enter your delivery address" required></textarea>
+                        <textarea id="deliveryAddress" class="form-input" rows="3"
+                            placeholder="Enter your delivery address" required></textarea>
                     </div>
 
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="tel" id="phoneNumber" class="form-input" placeholder="Enter your phone number" required>
+                        <input type="tel" id="phoneNumber" class="form-input" placeholder="Enter your phone number"
+                            required>
                     </div>
 
                     <div class="form-group">
                         <label>Order Notes (Optional)</label>
-                        <textarea id="orderNotes" class="form-input" rows="2" placeholder="Any special instructions?"></textarea>
+                        <textarea id="orderNotes" class="form-input" rows="2"
+                            placeholder="Any special instructions?"></textarea>
                     </div>
 
                     <div class="order-summary" id="checkoutSummary">
@@ -296,7 +295,8 @@
 
                     <div class="form-group">
                         <label>Your Review</label>
-                        <textarea id="reviewComment" class="form-input" rows="4" placeholder="Share your experience..." required></textarea>
+                        <textarea id="reviewComment" class="form-input" rows="4" placeholder="Share your experience..."
+                            required></textarea>
                     </div>
 
                     <button type="submit" class="btn-primary btn-full">Submit Review</button>
@@ -311,4 +311,5 @@
     <script src="JS/data.js"></script>
     <script src="JS/script.js"></script>
 </body>
+
 </html>

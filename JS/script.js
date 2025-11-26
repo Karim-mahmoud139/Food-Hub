@@ -81,11 +81,11 @@ function goToHome() {
     selectedRestaurant = null;
     cart = [];
     saveToStorage();
-    
+
     document.getElementById('homePage').classList.add('active');
     document.getElementById('menuPage').classList.remove('active');
     document.getElementById('adminPage').classList.remove('active');
-    
+
     renderRestaurants();
     updateCartBadge();
 }
@@ -94,11 +94,11 @@ function goToMenu(restaurant) {
     selectedRestaurant = restaurant;
     currentView = 'menu';
     selectedCategory = 'all';
-    
+
     document.getElementById('homePage').classList.remove('active');
     document.getElementById('menuPage').classList.add('active');
     document.getElementById('adminPage').classList.remove('active');
-    
+
     renderRestaurantHeader();
     renderCategoryTabs();
     renderMenuItems();
@@ -106,11 +106,11 @@ function goToMenu(restaurant) {
 
 function goToAdmin() {
     currentView = 'admin';
-    
+
     document.getElementById('homePage').classList.remove('active');
     document.getElementById('menuPage').classList.remove('active');
     document.getElementById('adminPage').classList.add('active');
-    
+
     renderAdminDashboard();
 }
 
@@ -118,12 +118,12 @@ function goToAdmin() {
 function renderRestaurants(searchQuery = '') {
     const grid = document.getElementById('restaurantsGrid');
     const title = document.getElementById('restaurantsTitle');
-    
+
     let filtered = mockRestaurants;
-    
+
     if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        filtered = mockRestaurants.filter(r => 
+        filtered = mockRestaurants.filter(r =>
             r.name.toLowerCase().includes(query) ||
             r.description.toLowerCase().includes(query) ||
             r.categories.some(cat => cat.toLowerCase().includes(query))
@@ -132,12 +132,12 @@ function renderRestaurants(searchQuery = '') {
     } else {
         title.textContent = 'Available Restaurants';
     }
-    
+
     if (filtered.length === 0) {
         grid.innerHTML = '<div class="text-center" style="grid-column: 1/-1; padding: 3rem;"><p style="color: var(--text-gray);">No restaurants found matching your search.</p></div>';
         return;
     }
-    
+
     grid.innerHTML = filtered.map(restaurant => {
         const { average, count } = getRestaurantRating(restaurant.id);
         return `
@@ -164,10 +164,10 @@ function renderRestaurants(searchQuery = '') {
 
 function renderRestaurantHeader() {
     if (!selectedRestaurant) return;
-    
+
     const { average, count } = getRestaurantRating(selectedRestaurant.id);
     const header = document.getElementById('restaurantHeader');
-    
+
     header.innerHTML = `
         <h1>${selectedRestaurant.name}</h1>
         <p>${selectedRestaurant.description}</p>
@@ -181,10 +181,10 @@ function renderRestaurantHeader() {
 
 function renderCategoryTabs() {
     if (!selectedRestaurant) return;
-    
+
     const tabsContainer = document.getElementById('categoryTabs');
     const categories = ['all', ...selectedRestaurant.categories];
-    
+
     tabsContainer.innerHTML = categories.map(cat => `
         <button class="category-tab ${cat === selectedCategory ? 'active' : ''}" 
                 onclick="selectCategory('${cat}')">
@@ -201,29 +201,29 @@ function selectCategory(category) {
 
 function renderMenuItems(searchQuery = '') {
     if (!selectedRestaurant) return;
-    
+
     const grid = document.getElementById('menuGrid');
     let items = mockMenuItems.filter(item => item.restaurantId === selectedRestaurant.id);
-    
+
     // Filter by category
     if (selectedCategory !== 'all') {
         items = items.filter(item => item.category === selectedCategory);
     }
-    
+
     // Filter by search
     if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        items = items.filter(item => 
+        items = items.filter(item =>
             item.name.toLowerCase().includes(query) ||
             item.description.toLowerCase().includes(query)
         );
     }
-    
+
     if (items.length === 0) {
         grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem;"><p style="color: var(--text-gray);">No items found</p></div>';
         return;
     }
-    
+
     grid.innerHTML = items.map(item => {
         const { average, count } = getMenuItemRating(item.id);
         return `
@@ -257,23 +257,23 @@ function addToCart(itemId) {
         showLoginModal();
         return;
     }
-    
+
     if (currentUser.role !== 'customer') {
         showToast('Please login as a customer to order food', 'error');
         return;
     }
-    
+
     const item = mockMenuItems.find(i => i.id === itemId);
     if (!item) return;
-    
+
     const existingItem = cart.find(c => c.menuItem.id === itemId);
-    
+
     if (existingItem) {
         existingItem.quantity++;
     } else {
         cart.push({ menuItem: item, quantity: 1 });
     }
-    
+
     saveToStorage();
     updateCartBadge();
     showToast(`${item.name} added to cart`, 'success');
@@ -284,7 +284,7 @@ function updateCartQuantity(itemId, quantity) {
         removeFromCart(itemId);
         return;
     }
-    
+
     const item = cart.find(c => c.menuItem.id === itemId);
     if (item) {
         item.quantity = quantity;
@@ -311,7 +311,7 @@ function updateCartBadge() {
 function toggleCart() {
     const drawer = document.getElementById('cartDrawer');
     drawer.classList.toggle('active');
-    
+
     if (drawer.classList.contains('active')) {
         renderCart();
     }
@@ -320,7 +320,7 @@ function toggleCart() {
 function renderCart() {
     const itemsContainer = document.getElementById('cartItems');
     const footer = document.getElementById('cartFooter');
-    
+
     if (cart.length === 0) {
         itemsContainer.innerHTML = `
             <div class="empty-cart">
@@ -331,11 +331,11 @@ function renderCart() {
         footer.innerHTML = '';
         return;
     }
-    
+
     const subtotal = cart.reduce((sum, item) => sum + (item.menuItem.price * item.quantity), 0);
     const deliveryFee = 2.99;
     const total = subtotal + deliveryFee;
-    
+
     itemsContainer.innerHTML = cart.map(item => `
         <div class="cart-item">
             <img src="${item.menuItem.image}" alt="${item.menuItem.name}" class="cart-item-image">
@@ -353,7 +353,7 @@ function renderCart() {
             </div>
         </div>
     `).join('');
-    
+
     footer.innerHTML = `
         <div class="cart-total">
             <span>Total:</span>
@@ -370,14 +370,14 @@ function proceedToCheckout() {
         showToast('Your cart is empty', 'error');
         return;
     }
-    
+
     toggleCart();
     showCheckoutModal();
 }
 
 // Auth Functions
 function showLoginModal() {
-    document.getElementById('loginModal').classList.add('active');
+    window.location.href = 'login.html';
 }
 
 function closeLoginModal() {
@@ -391,7 +391,7 @@ function switchAuthTab(mode) {
     const nameGroup = document.getElementById('nameGroup');
     const submitBtn = document.getElementById('authSubmitBtn');
     const title = document.getElementById('authTitle');
-    
+
     if (mode === 'login') {
         loginTab.classList.add('active');
         signupTab.classList.remove('active');
@@ -409,11 +409,11 @@ function switchAuthTab(mode) {
 
 function handleAuth(event) {
     event.preventDefault();
-    
+
     const email = document.getElementById('authEmail').value;
     const password = document.getElementById('authPassword').value;
     const role = document.getElementById('authRole').value;
-    
+
     if (currentAuthMode === 'signup') {
         const name = document.getElementById('authName').value;
         handleSignUp(name, email, password);
@@ -424,12 +424,12 @@ function handleAuth(event) {
 
 function handleSignUp(name, email, password) {
     const existingUser = users.find(u => u.email === email);
-    
+
     if (existingUser) {
         showToast('Email already registered', 'error');
         return;
     }
-    
+
     const newUser = {
         id: 'user_' + Date.now(),
         name,
@@ -437,15 +437,15 @@ function handleSignUp(name, email, password) {
         password,
         role: 'customer'
     };
-    
+
     users.push(newUser);
     currentUser = newUser;
     saveToStorage();
-    
+
     closeLoginModal();
     updateUIForUser();
     showToast(`Welcome ${newUser.name}!`, 'success');
-    
+
     // Reset form
     document.getElementById('authForm').reset();
 }
@@ -467,7 +467,7 @@ function handleLogin(email, password, role) {
         document.getElementById('authForm').reset();
         return;
     }
-    
+
     if (email === 'admin@demo.com' && password === 'demo123' && role === 'admin') {
         currentUser = {
             id: 'demo-admin',
@@ -484,25 +484,25 @@ function handleLogin(email, password, role) {
         document.getElementById('authForm').reset();
         return;
     }
-    
+
     // Check registered users
     const user = users.find(u => u.email === email && u.password === password);
-    
+
     if (user) {
         if (user.role !== role) {
             showToast(`This account is registered as ${user.role}`, 'error');
             return;
         }
-        
+
         currentUser = user;
         saveToStorage();
         closeLoginModal();
         updateUIForUser();
-        
+
         if (user.role === 'admin') {
             goToAdmin();
         }
-        
+
         showToast(`Welcome back ${user.name}!`, 'success');
         document.getElementById('authForm').reset();
     } else {
@@ -524,12 +524,12 @@ function updateUIForUser() {
     const userMenu = document.getElementById('userMenu');
     const userName = document.getElementById('userName');
     const orderHistoryBtn = document.getElementById('orderHistoryBtn');
-    
+
     if (currentUser) {
         loginBtn.style.display = 'none';
         userMenu.style.display = 'flex';
         userName.textContent = currentUser.name;
-        
+
         if (currentUser.role === 'customer') {
             orderHistoryBtn.style.display = 'inline-flex';
         } else {
@@ -557,7 +557,7 @@ function renderCheckoutSummary() {
     const subtotal = cart.reduce((sum, item) => sum + (item.menuItem.price * item.quantity), 0);
     const deliveryFee = 2.99;
     const total = subtotal + deliveryFee;
-    
+
     summary.innerHTML = `
         <h3>Order Summary</h3>
         ${cart.map(item => `
@@ -579,16 +579,16 @@ function renderCheckoutSummary() {
 
 function placeOrder(event) {
     event.preventDefault();
-    
+
     if (!selectedRestaurant || !currentUser) return;
-    
+
     const address = document.getElementById('deliveryAddress').value;
     const phone = document.getElementById('phoneNumber').value;
     const notes = document.getElementById('orderNotes').value;
-    
+
     const subtotal = cart.reduce((sum, item) => sum + (item.menuItem.price * item.quantity), 0);
     const total = subtotal + 2.99;
-    
+
     const newOrder = {
         id: 'ORD' + Date.now().toString(36).toUpperCase(),
         userId: currentUser.id,
@@ -602,16 +602,16 @@ function placeOrder(event) {
         notes,
         createdAt: new Date().toISOString()
     };
-    
+
     orders.push(newOrder);
     cart = [];
     saveToStorage();
     updateCartBadge();
-    
+
     closeCheckoutModal();
     showOrderTracking(newOrder);
     showToast('Order placed successfully!', 'success');
-    
+
     document.getElementById('checkoutForm').reset();
 }
 
@@ -627,15 +627,15 @@ function closeTrackingModal() {
 
 function renderOrderTracking(order) {
     const content = document.getElementById('trackingContent');
-    
+
     const steps = [
         { key: 'preparing', icon: 'fa-utensils', title: 'Preparing', description: 'Your food is being prepared' },
         { key: 'on-the-way', icon: 'fa-truck', title: 'On the Way', description: 'Your order is out for delivery' },
         { key: 'delivered', icon: 'fa-check-circle', title: 'Delivered', description: 'Enjoy your meal!' }
     ];
-    
+
     const currentIndex = steps.findIndex(s => s.key === order.status);
-    
+
     content.innerHTML = `
         <div class="order-tracking">
             <div class="order-id">Order #${order.id}</div>
@@ -643,11 +643,11 @@ function renderOrderTracking(order) {
             
             <div class="tracking-steps">
                 ${steps.map((step, index) => {
-                    let className = 'tracking-step';
-                    if (index < currentIndex) className += ' completed';
-                    if (index === currentIndex) className += ' active';
-                    
-                    return `
+        let className = 'tracking-step';
+        if (index < currentIndex) className += ' completed';
+        if (index === currentIndex) className += ' active';
+
+        return `
                         <div class="${className}">
                             <div class="step-icon">
                                 <i class="fas ${step.icon}"></i>
@@ -658,7 +658,7 @@ function renderOrderTracking(order) {
                             </div>
                         </div>
                     `;
-                }).join('')}
+    }).join('')}
             </div>
             
             <div class="order-summary">
@@ -684,7 +684,7 @@ function showOrderHistory() {
         showLoginModal();
         return;
     }
-    
+
     document.getElementById('historyModal').classList.add('active');
     renderOrderHistory();
 }
@@ -696,12 +696,12 @@ function closeHistoryModal() {
 function renderOrderHistory() {
     const content = document.getElementById('historyContent');
     const userOrders = orders.filter(o => o.userId === currentUser.id).reverse();
-    
+
     if (userOrders.length === 0) {
         content.innerHTML = '<div class="empty-cart"><i class="fas fa-receipt"></i><p>No orders yet</p></div>';
         return;
     }
-    
+
     content.innerHTML = userOrders.map(order => `
         <div class="order-card">
             <div class="order-card-header">
@@ -737,7 +737,7 @@ function renderOrderHistory() {
 function showItemDetails(itemId) {
     const item = mockMenuItems.find(i => i.id === itemId);
     if (!item) return;
-    
+
     document.getElementById('itemDetailsModal').classList.add('active');
     renderItemDetails(item);
 }
@@ -751,9 +751,9 @@ function renderItemDetails(item) {
     const content = document.getElementById('itemDetailsContent');
     const { average, count } = getMenuItemRating(item.id);
     const itemReviews = reviews.filter(r => r.menuItemId === item.id);
-    
+
     title.textContent = item.name;
-    
+
     content.innerHTML = `
         <img src="${item.image}" alt="${item.name}" class="item-details-image">
         
@@ -808,18 +808,18 @@ function renderItemDetails(item) {
 function showReviewModal(itemId) {
     const item = mockMenuItems.find(i => i.id === itemId);
     if (!item) return;
-    
+
     if (!currentUser) {
         showToast('Please login to write a review', 'error');
         showLoginModal();
         return;
     }
-    
+
     if (currentUser.role !== 'customer') {
         showToast('Only customers can write reviews', 'error');
         return;
     }
-    
+
     currentReviewMenuItem = item;
     currentReviewRating = 0;
     document.getElementById('reviewModal').classList.add('active');
@@ -852,17 +852,17 @@ function updateReviewStars() {
 
 function submitReview(event) {
     event.preventDefault();
-    
+
     if (!currentUser || !currentReviewMenuItem) return;
-    
+
     const rating = parseInt(document.getElementById('reviewRating').value);
     const comment = document.getElementById('reviewComment').value;
-    
+
     if (!rating) {
         showToast('Please select a rating', 'error');
         return;
     }
-    
+
     const newReview = {
         id: 'review_' + Date.now(),
         userId: currentUser.id,
@@ -873,13 +873,13 @@ function submitReview(event) {
         comment,
         createdAt: new Date().toISOString()
     };
-    
+
     reviews.push(newReview);
     saveToStorage();
-    
+
     closeReviewModal();
     showToast('Review submitted successfully!', 'success');
-    
+
     // Refresh item details if modal is open
     if (document.getElementById('itemDetailsModal').classList.contains('active')) {
         renderItemDetails(currentReviewMenuItem);
@@ -890,11 +890,11 @@ function submitReview(event) {
 function renderAdminDashboard() {
     const stats = document.getElementById('adminStats');
     const ordersList = document.getElementById('adminOrdersList');
-    
+
     const totalOrders = orders.length;
     const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
     const pendingOrders = orders.filter(o => o.status === 'preparing').length;
-    
+
     stats.innerHTML = `
         <div class="stat-card">
             <div class="stat-label">Total Orders</div>
@@ -909,9 +909,9 @@ function renderAdminDashboard() {
             <div class="stat-value">${pendingOrders}</div>
         </div>
     `;
-    
+
     const recentOrders = [...orders].reverse().slice(0, 20);
-    
+
     ordersList.innerHTML = `
         <h2>Recent Orders</h2>
         ${recentOrders.map(order => `
@@ -969,22 +969,22 @@ function showToast(message, type = 'success') {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    
+
     const icons = {
         success: 'fa-check-circle',
         error: 'fa-times-circle',
         warning: 'fa-exclamation-circle'
     };
-    
+
     toast.innerHTML = `
         <div class="toast-content">
             <i class="fas ${icons[type]} toast-icon"></i>
             <span>${message}</span>
         </div>
     `;
-    
+
     container.appendChild(toast);
-    
+
     setTimeout(() => {
         toast.style.opacity = '0';
         setTimeout(() => {
