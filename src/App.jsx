@@ -11,9 +11,13 @@ import Header from './components/Header';
 import Toast from './components/Toast';
 
 function App() {
+  // على Vercel، PUBLIC_URL مش موجود، فبنستخدم empty string
+  // على GitHub Pages، PUBLIC_URL موجود، فبنستخدمه
+  const basename = process.env.PUBLIC_URL || '';
+  
   return (
     <AppProvider>
-      <Router basename={process.env.PUBLIC_URL}>
+      <Router basename={basename}>
         <div className="min-h-screen bg-bg-gray transition-colors dark:bg-slate-950">
           <Header />
           <main className="pb-16">
