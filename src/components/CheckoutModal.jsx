@@ -65,7 +65,7 @@ const CheckoutModal = ({ isOpen, onClose }) => {
       total
     };
     const newOrder = placeOrder(orderData);
-    
+
     if (newOrder) {
       showToast('Order placed successfully!', 'success');
       onClose();
@@ -79,10 +79,10 @@ const CheckoutModal = ({ isOpen, onClose }) => {
   const modal = (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur"
+        className="absolute inset-0 bg-black/70"
         onClick={onClose}
       ></div>
-      
+
       <div
         className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-xl bg-white shadow-lg transition-colors dark:bg-slate-900"
         onClick={(e) => e.stopPropagation()}

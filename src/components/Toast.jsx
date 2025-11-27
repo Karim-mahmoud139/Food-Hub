@@ -22,7 +22,7 @@ const Toast = () => {
   };
 
   return (
-    <div className="fixed top-20 left-1/2 z-40 w-full max-w-xl -translate-x-1/2 px-4">
+    <div className="fixed top-20 left-1/2 z-[100] w-full max-w-xl -translate-x-1/2 px-4">
       <div className={`flex items-center gap-3 rounded-2xl border shadow-xl px-5 py-3 backdrop-blur transition-colors dark:bg-slate-900/90 dark:text-white ${variantStyles[toast.type]}`}>
         <i className={`text-xl ${icons[toast.type]}`}></i>
         <span className="text-sm text-text-dark dark:text-white">{toast.message}</span>
