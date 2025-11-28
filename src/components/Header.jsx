@@ -35,11 +35,18 @@ const Header = () => {
     <header className="sticky top-0 z-50 bg-white/95 shadow-sm backdrop-blur transition-colors dark:bg-slate-900/95">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
         <div
-          className="logo text-2xl font-bold cursor-pointer select-none"
+          className="logo flex items-center gap-2 cursor-pointer select-none group"
           onClick={() => navigate('/')}
         >
-          <span className="bg-primary-orange text-primary-black px-2 py-1 rounded-md">Food</span>
-          <span className="bg-primary-black text-primary-orange px-2 py-1 rounded-md ml-1">Hub</span>
+          <img
+            src={process.env.PUBLIC_URL + '/logo192.png'}
+            alt="FoodHub Logo"
+            className="h-10 w-10 object-contain transition-transform group-hover:scale-110"
+          />
+          <div className="text-2xl font-bold tracking-tight">
+            <span className="text-text-dark dark:text-white transition-colors">Food</span>
+            <span className="text-primary-orange">Hub</span>
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
