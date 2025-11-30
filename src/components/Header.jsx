@@ -53,36 +53,43 @@ const Header = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Dark Mode Toggle - Icon Only */}
           <button
-            className="flex items-center gap-2 rounded-full border border-border-color px-4 py-2 text-sm font-medium text-text-gray transition hover:border-primary-orange hover:text-primary-orange dark:border-slate-700 dark:text-slate-200"
+            className="group relative flex h-10 w-10 items-center justify-center rounded-full border border-border-color text-text-gray transition-all hover:border-primary-orange hover:bg-primary-orange/10 hover:text-primary-orange dark:border-slate-700 dark:text-slate-200 dark:hover:bg-primary-orange/20"
             onClick={toggleDarkMode}
-            aria-label="Toggle dark mode"
+            aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
             aria-pressed={isDarkMode}
+            title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
           >
-            <i className={`fas ${isDarkMode ? 'fa-sun' : 'fa-moon'}`}></i>
-            <span className="hidden sm:inline">{isDarkMode ? 'Light' : 'Night'} Mode</span>
+            <i className={`fas ${isDarkMode ? 'fa-sun' : 'fa-moon'} text-lg`}></i>
           </button>
+
           {/* Cart & History Buttons */}
           {currentUser && !isAdmin && (
             <div className="flex items-center gap-3">
+              {/* Cart Button - Icon Only with Badge */}
               <button
-                className="relative flex items-center gap-2 rounded-lg border border-border-color px-4 py-2 text-sm font-medium text-text-gray transition hover:border-primary-orange hover:text-primary-orange dark:border-slate-700 dark:text-slate-200"
+                className="group relative flex h-10 w-10 items-center justify-center rounded-full border border-border-color text-text-gray transition-all hover:border-primary-orange hover:bg-primary-orange/10 hover:text-primary-orange dark:border-slate-700 dark:text-slate-200 dark:hover:bg-primary-orange/20"
                 onClick={() => setIsCartOpen(true)}
+                aria-label={`Shopping cart with ${cartCount} items`}
+                title="Shopping Cart"
               >
-                <i className="fas fa-shopping-cart text-base"></i>
-                <span>Cart</span>
+                <i className="fas fa-shopping-cart text-lg"></i>
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-primary-orange text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                    {cartCount}
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary-orange text-white text-xs font-bold shadow-lg">
+                    {cartCount > 9 ? '9+' : cartCount}
                   </span>
                 )}
               </button>
+
+              {/* Order History Button - Icon Only */}
               <button
-                className="flex items-center gap-2 rounded-lg border border-border-color px-4 py-2 text-sm font-medium text-text-gray transition hover:border-primary-orange hover:text-primary-orange dark:border-slate-700 dark:text-slate-200"
+                className="group relative flex h-10 w-10 items-center justify-center rounded-full border border-border-color text-text-gray transition-all hover:border-primary-orange hover:bg-primary-orange/10 hover:text-primary-orange dark:border-slate-700 dark:text-slate-200 dark:hover:bg-primary-orange/20"
                 onClick={() => setIsHistoryOpen(true)}
+                aria-label="View order history"
+                title="Order History"
               >
-                <i className="fas fa-clock text-base"></i>
-                <span className="hidden sm:inline">Order History</span>
+                <i className="fas fa-history text-lg"></i>
               </button>
             </div>
           )}
