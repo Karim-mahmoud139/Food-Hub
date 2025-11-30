@@ -14,6 +14,7 @@ const AuthModal = ({ isOpen, onClose, standalone = false }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('customer');
+  const [errors, setErrors] = useState({});
   const portalRoot = usePortalRoot();
 
   useEffect(() => {
@@ -23,6 +24,7 @@ const AuthModal = ({ isOpen, onClose, standalone = false }) => {
       setEmail('');
       setPassword('');
       setRole('customer');
+      setErrors({});
     }
   }, [isOpen, standalone]);
 
@@ -31,10 +33,41 @@ const AuthModal = ({ isOpen, onClose, standalone = false }) => {
   // دالة إرسال الفورم
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const newErrors = {};
+
+    // التحقق من الإيميل
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    // التحقق من الباسورد
+    if (!password || password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters long';
+    }
+
+    // التحقق من الاسم في حالة التسجيل
+    if (authMode === 'signup') {
+      if (!name || name.trim().length < 3) {
+        newErrors.name = 'Name must be at least 3 characters long';
+      } else if (/\d/.test(name)) {
+        newErrors.name = 'Name cannot contain numbers';
+      }
+    }
+
+    // لو في أخطاء، بنوقف هنا
+    if (Object.keys(newErrors).length) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+
     // بنبعت البيانات حسب نوع الـ mode
     const payload = authMode === 'login'
       ? { email, password }
-      : { email, password, name, role };
+      : { email, password, name: name.trim(), role };
 
     const loggedInUser = handleLogin(payload);
 
@@ -79,6 +112,9 @@ const AuthModal = ({ isOpen, onClose, standalone = false }) => {
                 placeholder="Enter your name"
                 required
               />
+              {errors.name && (
+                <p className="mt-2 text-sm text-error">{errors.name}</p>
+              )}
             </div>
             <div className="mb-4">
               <label className="mb-2 block font-medium text-text-dark dark:text-white">Account Type</label>
@@ -105,6 +141,9 @@ const AuthModal = ({ isOpen, onClose, standalone = false }) => {
             placeholder="Enter your email"
             required
           />
+          {errors.email && (
+            <p className="mt-2 text-sm text-error">{errors.email}</p>
+          )}
         </div>
 
         <div className="mb-6">
@@ -117,6 +156,9 @@ const AuthModal = ({ isOpen, onClose, standalone = false }) => {
             placeholder="Enter your password"
             required
           />
+          {errors.password && (
+            <p className="mt-2 text-sm text-error">{errors.password}</p>
+          )}
         </div>
 
         <button
@@ -129,7 +171,10 @@ const AuthModal = ({ isOpen, onClose, standalone = false }) => {
         <div className="mt-4 text-center">
           <button
             type="button"
-            onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
+            onClick={() => {
+              setAuthMode(authMode === 'login' ? 'signup' : 'login');
+              setErrors({});
+            }}
             className="text-primary-orange hover:text-primary-orange-dark"
           >
             {authMode === 'login' ? 'Create an account' : 'Already have an account? Sign in'}
@@ -164,4 +209,3 @@ const AuthModal = ({ isOpen, onClose, standalone = false }) => {
 };
 
 export default AuthModal;
-

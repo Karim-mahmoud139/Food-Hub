@@ -34,20 +34,20 @@ const Header = () => {
   // ستايل موحد للأزرار الدائرية عشان نضمن التناسق
   const iconButtonStyle = `
     group relative flex h-10 w-10 items-center justify-center rounded-full 
-    border transition-all duration-300
+    border-2 transition-all duration-300
     
     /* Light Mode Styles */
     border-border-color text-text-gray bg-white
     hover:border-primary-orange hover:bg-primary-orange/5 hover:text-primary-orange hover:shadow-md
     
-    /* Dark Mode Styles - High Visibility (Pop out) */
-    dark:border-slate-400 dark:bg-slate-700 dark:text-white
-    dark:shadow-[0_0_10px_rgba(255,255,255,0.1)]
+    /* Dark Mode Styles - Toned Down Visibility */
+    dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200
+    dark:shadow-none
     
     /* Hover State in Dark Mode */
-    dark:hover:border-primary-orange dark:hover:bg-slate-600 
+    dark:hover:border-primary-orange dark:hover:bg-slate-700 
     dark:hover:text-primary-orange 
-    dark:hover:shadow-[0_0_15px_rgba(249,115,22,0.6)]
+    dark:hover:shadow-[0_0_10px_rgba(249,115,22,0.3)]
   `;
 
   return (
@@ -122,6 +122,13 @@ const Header = () => {
             >
               Login
             </button>
+          )}
+
+          {/* Admin Badge */}
+          {isAdmin && (
+            <span className="hidden md:flex items-center rounded-full bg-red-500/10 px-3 py-1 text-xs font-bold text-red-500 border border-red-500/20 mr-1 animate-pulse-once">
+              ADMIN
+            </span>
           )}
 
           {/* Logout Button */}

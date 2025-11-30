@@ -21,6 +21,10 @@ export const AppProvider = ({ children }) => {
   });
   const [isAuthReady, setIsAuthReady] = useState(false);
 
+  // Admin Data State
+  const [restaurants, setRestaurants] = useState(mockRestaurants);
+  const [menuItems, setMenuItems] = useState(mockMenuItems);
+
   // بنحفظ الداتا في localStorage عشان لو المستخدم عمل refresh تفضل موجودة
   useEffect(() => {
     const savedUser = localStorage.getItem('foodhub-user');
@@ -88,6 +92,30 @@ export const AppProvider = ({ children }) => {
     const average = itemReviews.reduce((sum, r) => sum + r.rating, 0) / itemReviews.length;
     return { average, count: itemReviews.length };
   };
+
+  // === Admin Functions ===
+  const addRestaurant = (newRestaurant) => {
+    const restaurant = {
+      ...newRestaurant,
+      id: `rest_${Date.now()}`,
+      rating: 0,
+      reviews: 0
+    };
+    setRestaurants(prev => [restaurant, ...prev]); // Add to top
+    showToast('Restaurant added successfully!', 'success');
+  };
+
+  const addMenuItem = (newItem) => {
+    const item = {
+      ...newItem,
+      id: `item_${Date.now()}`,
+      rating: 0,
+      reviews: 0
+    };
+    setMenuItems(prev => [item, ...prev]); // Add to top
+    showToast('Menu item added successfully!', 'success');
+  };
+
   const addToCart = (itemId) => {
     if (!currentUser) {
       showToast('Please login to add items to cart', 'error');
@@ -99,7 +127,7 @@ export const AppProvider = ({ children }) => {
       return false;
     }
 
-    const item = mockMenuItems.find(i => i.id === itemId);
+    const item = menuItems.find(i => i.id === itemId);
     if (!item) return false;
 
     // لازم نتأكد إن كل الـ items في الـ cart من نفس المطعم
@@ -221,9 +249,9 @@ export const AppProvider = ({ children }) => {
     selectedRestaurant,
     selectedCategory,
     toast,
-    // Data
-    restaurants: mockRestaurants,
-    menuItems: mockMenuItems,
+    // Data (Now State)
+    restaurants,
+    menuItems,
     // Setters
     setCurrentUser,
     setSelectedRestaurant,
@@ -241,6 +269,9 @@ export const AppProvider = ({ children }) => {
     isDarkMode,
     toggleDarkMode,
     isAuthReady,
+    // Admin Functions
+    addRestaurant,
+    addMenuItem,
     // For debugging
     setCart,
     setOrders

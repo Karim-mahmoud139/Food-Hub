@@ -4,6 +4,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import MenuItemCard from '../components/MenuItemCard';
+import AddMenuItemModal from '../components/AddMenuItemModal';
 
 const MenuPage = () => {
   const { restaurantId } = useParams();
@@ -13,11 +14,15 @@ const MenuPage = () => {
     selectedCategory,
     setSelectedCategory,
     showToast,
-    getRestaurantRating
+    getRestaurantRating,
+    currentUser
   } = useAppContext();
 
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+
+  const isAdmin = currentUser?.role === 'admin';
 
   // بنلاقي المطعم من الـ ID
   const restaurant = restaurants.find(r => r.id === restaurantId);
@@ -29,6 +34,11 @@ const MenuPage = () => {
 
   // بنجيب الفئات بتاعة المطعم
   const categories = restaurant ? ['all', ...restaurant.categories] : [];
+
+  // Reset selected category when entering the page
+  useEffect(() => {
+    setSelectedCategory('all');
+  }, [restaurantId, setSelectedCategory]);
 
   // بنفلتر الأصناف حسب الفئة والبحث
   const filteredItems = useMemo(() => {
@@ -66,11 +76,11 @@ const MenuPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 text-text-dark dark:text-white">
-      {/* Back to Restaurants Button - Icon Only with Neon Effect */}
+    <div className="container mx-auto px-4 py-6 text-text-dark dark:text-white pb-24">
+      {/* Back to Restaurants Button - Icon Only with Toned Down Effect */}
       <button
         onClick={() => navigate('/')}
-        className="mb-6 group relative flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 border-border-color text-text-gray bg-white hover:border-primary-orange hover:bg-primary-orange/5 hover:text-primary-orange hover:shadow-md dark:border-slate-400 dark:bg-slate-700 dark:text-white dark:shadow-[0_0_10px_rgba(255,255,255,0.1)] dark:hover:border-primary-orange dark:hover:bg-slate-600 dark:hover:text-primary-orange dark:hover:shadow-[0_0_15px_rgba(249,115,22,0.6)]"
+        className="mb-6 group relative flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-300 border-border-color text-text-gray bg-white hover:border-primary-orange hover:bg-primary-orange/5 hover:text-primary-orange hover:shadow-md dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:shadow-none dark:hover:border-primary-orange dark:hover:bg-slate-700 dark:hover:text-primary-orange dark:hover:shadow-[0_0_10px_rgba(249,115,22,0.3)]"
         aria-label="Back to Restaurants"
         title="Back to Restaurants"
       >
@@ -98,14 +108,14 @@ const MenuPage = () => {
         />
       </div>
 
-      <div className="mb-6 flex gap-2 overflow-x-auto pb-3">
+      <div className="mb-6 flex gap-2 overflow-x-auto pb-3 no-scrollbar">
         {categories.map(cat => (
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
             className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-all duration-300 ${selectedCategory === cat
-                ? 'bg-primary-orange text-white shadow-lg shadow-primary-orange/30'
-                : 'bg-white border border-border-color text-text-dark hover:bg-bg-gray dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-primary-orange/50'
+              ? 'bg-primary-orange text-white shadow-lg shadow-primary-orange/30'
+              : 'bg-white border border-border-color text-text-dark hover:bg-bg-gray dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-primary-orange/50'
               }`}
           >
             {cat.charAt(0).toUpperCase() + cat.slice(1)}
@@ -121,6 +131,25 @@ const MenuPage = () => {
             <MenuItemCard key={item.id} item={item} />
           ))}
         </div>
+      )}
+
+      {/* Admin Add Menu Item Button */}
+      {isAdmin && (
+        <>
+          <button
+            onClick={() => setIsAddItemModalOpen(true)}
+            className="fixed bottom-8 right-8 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary-orange text-white shadow-lg transition-transform hover:scale-110 hover:bg-primary-orange-dark focus:outline-none focus:ring-4 focus:ring-primary-orange/30 animate-bounce-subtle"
+            title="Add New Menu Item"
+          >
+            <i className="fas fa-plus text-2xl"></i>
+          </button>
+          <AddMenuItemModal
+            isOpen={isAddItemModalOpen}
+            onClose={() => setIsAddItemModalOpen(false)}
+            restaurantId={restaurant.id}
+            categories={categories}
+          />
+        </>
       )}
     </div>
   );

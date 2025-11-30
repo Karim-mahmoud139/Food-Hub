@@ -2,12 +2,21 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
+import AddRestaurantModal from '../components/AddRestaurantModal';
+import AddMenuItemModal from '../components/AddMenuItemModal';
 
 const AdminPage = () => {
-  const { orders, setOrders, showToast, currentUser, isAuthReady, reviews } = useAppContext();
+  const { orders, setOrders, showToast, currentUser, isAuthReady, reviews, restaurants } = useAppContext();
   const navigate = useNavigate();
   const [statusFilter, setStatusFilter] = useState('all');
   const [isChecking, setIsChecking] = useState(true);
+
+  // Modal States
+  const [showAddOptions, setShowAddOptions] = useState(false);
+  const [showAddRestaurant, setShowAddRestaurant] = useState(false);
+  const [showAddMenuItem, setShowAddMenuItem] = useState(false);
+  const [targetRestaurantId, setTargetRestaurantId] = useState('');
+  const [addItemStep, setAddItemStep] = useState('initial'); // 'initial' or 'select-restaurant'
 
   // لازم كل الـ hooks تكون في الأول قبل أي return
   // فلترة الطلبات حسب الحالة
@@ -102,9 +111,35 @@ const AdminPage = () => {
     .reverse()
     .filter(review => orders.some(order => order.id === review.orderId));
 
+  // Handlers for Add Logic
+  const handleOpenAddOptions = () => {
+    setAddItemStep('initial');
+    setTargetRestaurantId('');
+    setShowAddOptions(true);
+  };
+
+  const handleSelectRestaurantForMenuItem = () => {
+    if (!targetRestaurantId) {
+      showToast('Please select a restaurant first', 'error');
+      return;
+    }
+    setShowAddOptions(false);
+    setShowAddMenuItem(true);
+  };
+
   return (
     <div className="container mx-auto px-4 py-6 text-text-dark dark:text-white">
-      <h1 className="mb-6 text-2xl font-bold">Restaurant Admin Dashboard</h1>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <h1 className="text-2xl font-bold">Restaurant Admin Dashboard</h1>
+
+        <button
+          onClick={handleOpenAddOptions}
+          className="flex items-center justify-center gap-2 bg-primary-orange text-white px-6 py-3 rounded-xl hover:bg-primary-orange-dark transition-all shadow-lg hover:shadow-primary-orange/30 active:scale-95 font-semibold"
+        >
+          <i className="fas fa-plus"></i>
+          <span>Add New</span>
+        </button>
+      </div>
 
       {/* Stats Cards */}
       <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
@@ -261,6 +296,105 @@ const AdminPage = () => {
           </div>
         )}
       </div>
+
+      {/* Add Options Modal */}
+      {showAddOptions && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/40">
+          <div
+            className="absolute inset-0"
+            onClick={() => setShowAddOptions(false)}
+          ></div>
+
+          <div className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl transition-all dark:bg-slate-800 dark:border dark:border-slate-700 animate-in fade-in zoom-in duration-300">
+            <div className="bg-primary-orange p-4 text-white">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold">
+                  {addItemStep === 'initial' ? 'What would you like to add?' : 'Select Restaurant'}
+                </h2>
+                <button onClick={() => setShowAddOptions(false)} className="text-white/80 hover:text-white">
+                  <i className="fas fa-times text-xl"></i>
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6">
+              {addItemStep === 'initial' ? (
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    onClick={() => {
+                      setShowAddOptions(false);
+                      setShowAddRestaurant(true);
+                    }}
+                    className="flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-transparent bg-gray-50 p-6 transition-all hover:border-primary-orange hover:bg-primary-orange/5 hover:shadow-lg dark:bg-slate-700/50 dark:hover:bg-slate-700"
+                  >
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-primary-orange dark:bg-slate-600 dark:text-orange-400">
+                      <i className="fas fa-store text-3xl"></i>
+                    </div>
+                    <span className="font-bold text-text-dark dark:text-white">Restaurant</span>
+                  </button>
+
+                  <button
+                    onClick={() => setAddItemStep('select-restaurant')}
+                    className="flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-transparent bg-gray-50 p-6 transition-all hover:border-primary-orange hover:bg-primary-orange/5 hover:shadow-lg dark:bg-slate-700/50 dark:hover:bg-slate-700"
+                  >
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-500 dark:bg-slate-600 dark:text-blue-400">
+                      <i className="fas fa-utensils text-3xl"></i>
+                    </div>
+                    <span className="font-bold text-text-dark dark:text-white">Menu Item</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                      Select a restaurant to add items to:
+                    </label>
+                    <select
+                      className="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-primary-orange focus:ring-1 focus:ring-primary-orange dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                      value={targetRestaurantId}
+                      onChange={(e) => setTargetRestaurantId(e.target.value)}
+                    >
+                      <option value="">-- Select Restaurant --</option>
+                      {restaurants.map(r => (
+                        <option key={r.id} value={r.id}>{r.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    <button
+                      onClick={() => setAddItemStep('initial')}
+                      className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
+                    >
+                      Back
+                    </button>
+                    <button
+                      onClick={handleSelectRestaurantForMenuItem}
+                      disabled={!targetRestaurantId}
+                      className="flex-1 rounded-lg bg-primary-orange px-4 py-2 text-sm font-medium text-white hover:bg-primary-orange-dark disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modals */}
+      <AddRestaurantModal
+        isOpen={showAddRestaurant}
+        onClose={() => setShowAddRestaurant(false)}
+      />
+
+      <AddMenuItemModal
+        isOpen={showAddMenuItem}
+        onClose={() => setShowAddMenuItem(false)}
+        restaurantId={targetRestaurantId}
+        categories={restaurants.find(r => r.id === targetRestaurantId)?.categories || []}
+      />
     </div>
   );
 };

@@ -6,7 +6,8 @@ import { useAppContext } from '../context/AppContext';
 import usePortalRoot from '../hooks/usePortalRoot';
 
 const CheckoutModal = ({ isOpen, onClose }) => {
-  const { cart, placeOrder, showToast, selectedRestaurant } = useAppContext();
+  const { cart, placeOrder, showToast, selectedRestaurant, currentUser } = useAppContext();
+  const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
   const [notes, setNotes] = useState('');
@@ -20,12 +21,13 @@ const CheckoutModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen) {
+      setName(currentUser?.name || '');
       setAddress('');
       setPhone('');
       setNotes('');
       setErrors({});
     }
-  }, [isOpen]);
+  }, [isOpen, currentUser]);
 
   // دالة إرسال الطلب
   const handleSubmit = (e) => {
@@ -35,19 +37,29 @@ const CheckoutModal = ({ isOpen, onClose }) => {
       return;
     }
 
+    const trimmedName = name.trim();
     const trimmedAddress = address.trim();
     const trimmedPhone = phone.trim();
 
     const newErrors = {};
 
+    // التحقق من الاسم - لازم يكون حروف بس ومينفعش أرقام
+    if (!trimmedName || trimmedName.length < 3) {
+      newErrors.name = 'Name must be at least 3 characters long';
+    } else if (/\d/.test(trimmedName)) {
+      newErrors.name = 'Name cannot contain numbers';
+    }
+
     // التحقق من العنوان - لازم يكون فيه حروف مش أرقام بس
     if (!trimmedAddress || trimmedAddress.length < 10) {
       newErrors.address = 'Please enter a valid address (at least 10 characters)';
+    } else if (!/[a-zA-Z\u0600-\u06FF]/.test(trimmedAddress)) { // Supports English and Arabic letters
+      newErrors.address = 'Address must contain letters';
     }
 
     // التحقق من رقم التليفون - لازم يكون أرقام بس وطول معقول
     if (!trimmedPhone || !/^\d{10,15}$/.test(trimmedPhone)) {
-      newErrors.phone = 'Please enter a valid phone number (10-15 digits)';
+      newErrors.phone = 'Please enter a valid phone number (10-15 digits, no letters)';
     }
 
     // لو في أخطاء، بنوقف هنا
@@ -59,6 +71,7 @@ const CheckoutModal = ({ isOpen, onClose }) => {
     // لو كل حاجة تمام، بنعمل الطلب
     setErrors({});
     const orderData = {
+      name: trimmedName,
       address: trimmedAddress,
       phone: trimmedPhone,
       notes,
@@ -107,6 +120,21 @@ const CheckoutModal = ({ isOpen, onClose }) => {
         <div className="p-5 text-text-dark dark:text-slate-100">
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
+              <label className="mb-2 block font-medium text-text-dark dark:text-white">Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full rounded-lg border border-border-color bg-transparent p-3 dark:border-slate-700"
+                placeholder="Enter your name"
+                required
+              />
+              {errors.name && (
+                <p className="mt-2 text-sm text-error">{errors.name}</p>
+              )}
+            </div>
+
+            <div className="mb-4">
               <label className="mb-2 block font-medium text-text-dark dark:text-white">Delivery Address</label>
               <textarea
                 value={address}
@@ -126,9 +154,13 @@ const CheckoutModal = ({ isOpen, onClose }) => {
               <input
                 type="tel"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  // السماح بالأرقام فقط
+                  const value = e.target.value.replace(/\D/g, '');
+                  setPhone(value);
+                }}
                 className="w-full rounded-lg border border-border-color bg-transparent p-3 dark:border-slate-700"
-                placeholder="Enter your phone number"
+                placeholder="Enter your phone number (numbers only)"
                 required
               />
               {errors.phone && (
