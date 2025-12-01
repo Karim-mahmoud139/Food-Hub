@@ -75,7 +75,9 @@ export const AppProvider = ({ children }) => {
   };
 
   // تبديل بين الوضع الليلي والنهاري
-  const toggleDarkMode = () => setIsDarkMode(prev => !prev);
+  const toggleDarkMode = () => {
+    setIsDarkMode(prev => !prev);
+  };
 
   // حساب متوسط تقييم المطعم
   const getRestaurantRating = (restaurantId) => {

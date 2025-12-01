@@ -56,7 +56,7 @@ const Header = () => {
         {/* Logo Section */}
         <div
           className="logo flex items-center gap-2 cursor-pointer select-none group"
-          onClick={() => navigate('/')}
+          onClick={() => navigate(isAdmin ? '/admin' : '/')}
         >
           <img
             src={process.env.PUBLIC_URL + '/logo192.png'}
@@ -76,6 +76,7 @@ const Header = () => {
         <div className="flex items-center gap-3">
           {/* Dark Mode Toggle */}
           <button
+            id="theme-toggle-btn"
             className={iconButtonStyle}
             onClick={toggleDarkMode}
             aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}

@@ -23,15 +23,14 @@ body {
   color: #1f2937;
   background-color: #f9fafb;
   line-height: 1.6;
-  transition: background-color 0.35s ease, color 0.35s ease;
+  /* Standard smooth transition for theme switching */
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 body.dark-body {
   background-color: #020617;
   color: #e2e8f0;
 }
-
-/* ... (rest of existing styles) ... */
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
@@ -40,15 +39,25 @@ body.dark-body {
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 /* Animation Utilities */
 @keyframes pulse-once {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .animate-pulse-once {
@@ -56,8 +65,15 @@ body.dark-body {
 }
 
 @keyframes bounce-subtle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 .animate-bounce-subtle {
@@ -65,8 +81,15 @@ body.dark-body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-in {
