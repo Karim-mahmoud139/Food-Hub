@@ -121,11 +121,11 @@ const AuthModal = ({ isOpen, onClose, standalone = false }) => {
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="w-full rounded-lg border border-border-color bg-transparent p-3 dark:border-slate-700"
+                className="w-full rounded-lg border border-border-color bg-transparent p-3 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                 required
               >
-                <option value="customer">Customer</option>
-                <option value="admin">Admin</option>
+                <option value="customer" className="dark:bg-slate-800">Customer</option>
+                <option value="admin" className="dark:bg-slate-800">Admin</option>
               </select>
             </div>
           </>
